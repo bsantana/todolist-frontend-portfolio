@@ -5,6 +5,8 @@ import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
 
+import { getListTasks, createTasks, deleteTasks } from './services/apiService';
+
 import ModalAdicionarTarefa from './components/ModalAdicionarTarefa'
 
 import './App.css';
@@ -25,41 +27,8 @@ const CustomToggle = React.forwardRef(({ onClick }, ref) => (
   </button>
 ));
 
-const getListTasks = async () => {
-  try {
-    const result = await axios.get('http://localhost:3000/task');
-    console.log("RESULT >>> ", result.data)
-    return result.data;
-  } catch (err) {
-    console.log('ERR >>>', err)
-    throw err;
-  }
-}
 
-const createTask = async (title) => {
-  try {
-    const data = {
-      title: title
-    }
-    const result = await axios.post('http://localhost:3000/task', data);
-    console.log("RESULT >>> ", result.data)
-    return result.data;
-  } catch (err) {
-    console.log('ERR >>>', err)
-    throw err;
-  }
-}
 
-const deleteTask = async (taskId) => {
-  try {
-    const result = await axios.delete(`http://localhost:3000/task/${taskId}`);
-    console.log("RESULT >>> ", result.data)
-    return result.data;
-  } catch (err) {
-    console.log('ERR >>>', err)
-    throw err;
-  }
-}
 
 export function App() {
   const [show, setShow] = useState(false);
@@ -78,14 +47,14 @@ export function App() {
   }
 
   const handleAddTask = async () => {
-    await createTask(inputValueTask)
+    await createTasks(inputValueTask)
     await buscarTasks()
     handleClose()
     setInputValueTask('')
   }
 
-  const handleDeleteTask = async (taskId) => {
-    await deleteTask(taskId);
+  const handleDeleteTasks = async (taskId) => {
+    await deleteTasks(taskId);
     await buscarTasks();
   }
 
@@ -96,7 +65,7 @@ export function App() {
     }
   }
 
-  const renderToggle = (taskId, handleDeleteTask) => {
+  const renderToggle = (taskId, handleDeleteTasks) => {
     return (
       <Dropdown>
         <Dropdown.Toggle as={CustomToggle}>
@@ -108,7 +77,7 @@ export function App() {
           <Dropdown.Item eventKey="2">Duplicar</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item eventKey="3">Arquivar</Dropdown.Item>
-          <Dropdown.Item eventKey="1" style={{color: 'red'}} onClick={() => handleDeleteTask(taskId)}>Excluir</Dropdown.Item>
+          <Dropdown.Item eventKey="1" style={{color: 'red'}} onClick={() => handleDeleteTasks(taskId)}>Excluir</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     )
@@ -124,7 +93,7 @@ export function App() {
                 <li style={{borderBottom: '1px solid #eee', listStyle: 'none', padding: '8px 0px', paddingRight: 40, fontSize: 14}}>{task.title}</li>
                 <div style={{position: 'absolute', right: 0, top: 0, marginTop: 8}}>
                   {/* <button className='btn-mais-acoes'>{renderSVGThreeDots()}</button> */}
-                  {renderToggle(task.id, handleDeleteTask)}
+                  {renderToggle(task.id, handleDeleteTasks)}
                 </div>
               </div>
             )
