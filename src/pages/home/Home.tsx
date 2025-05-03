@@ -1,9 +1,7 @@
-import './App.css';
-
-export function App() {
+export function Home() {
   return (
     <>
-      <h1>Parcel React App2</h1>
+      <h1>Parcel React Home</h1>
       <p>Edit <code>src/App.tsx</code> to get started!</p>
     </>
   );
