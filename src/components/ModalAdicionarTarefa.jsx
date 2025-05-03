@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-const ModalAdicionarTarefa = ({ show, handleClose, handleChange }) => {
+const ModalAdicionarTarefa = ({ show, handleClose, handleAddTask, handleChange }) => {
 	return (
 		<>
 			<Modal show={show} onHide={handleClose} centered>
@@ -21,7 +21,7 @@ const ModalAdicionarTarefa = ({ show, handleClose, handleChange }) => {
 					</Form>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="primary" onClick={handleClose}>
+					<Button variant="primary" onClick={handleAddTask}>
 						Adicionar tarefa
 					</Button>
 				</Modal.Footer>

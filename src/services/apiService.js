@@ -20,7 +20,8 @@ export const createTasks = async (title) => {
     const response = await axios.post(`${API_BASE_URL}/tasks`, data);
     return response.data;
   } catch (err) {
-    console.error('Erro ao criar tasks:', err);
+    console.log('Erro ao criar tasks:', err);
+    // return false;
     throw err;
   }
 }

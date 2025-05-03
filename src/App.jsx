@@ -3,9 +3,10 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
-import axios from 'axios';
+import { MdOutlineAddCircle } from "react-icons/md";
+import { CiSearch, CiGrid41 } from "react-icons/ci";
 
-import { getListTasks, createTasks, deleteTasks } from './services/apiService';
+import { getListTasks, createTasks, deleteTasks } from './services/tasksService';
 
 import ModalAdicionarTarefa from './components/ModalAdicionarTarefa'
 
@@ -47,10 +48,19 @@ export function App() {
   }
 
   const handleAddTask = async () => {
-    await createTasks(inputValueTask)
-    await buscarTasks()
-    handleClose()
-    setInputValueTask('')
+    try {
+      await createTasks(inputValueTask)
+      await buscarTasks()
+      handleClose()
+      setInputValueTask('')
+    } catch (err) {
+      console.error(err)
+      if(err.response.data) {
+        alert(err.response.data.message)
+      }
+      
+    }
+    
   }
 
   const handleDeleteTasks = async (taskId) => {
@@ -107,12 +117,35 @@ export function App() {
     <>
       <Container fluid>
         <Row>
-          <Col sm={2} style={{height: '100vh', backgroundColor: '#fcfaf8'}}>
-            <div onClick={handleShow}>Icon - Adicionar tarefas</div>
-            <div onClick={buscarTasks}>Icon - Busca</div>
-            <div>Icon - Filtros</div>
+          <Col sm={2} style={{height: '100vh', backgroundColor: '#fcfaf8', position: 'fixed'}}>
+            <div onClick={handleShow} style={{display: 'flex', alignItems: 'center', cursor: 'pointer', marginTop: 14}}>
+              <button style={{border: 'none', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', padding: '4px 0px', color: '#dc4c3e'}}>
+                <div style={{display: 'flex', marginRight: 6}}>
+                  <MdOutlineAddCircle color='#dc4c3e' size='1.5rem' />
+                </div>
+                <span style={{fontSize: 14, fontWeight: 500}}>Adicionar tarefa</span>
+              </button>
+            </div>
+            <div style={{padding: '6px 0'}}>
+              <div onClick={buscarTasks} style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
+                <button style={{border: 'none', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', padding: '4px 0px'}}>
+                  <div style={{display: 'flex', marginRight: 6}}>
+                    <CiSearch size='1.35rem' />
+                  </div>
+                  <span style={{fontSize: 14}}>Buscar</span>
+                </button>
+              </div>
+              <div>
+                <button style={{border: 'none', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', padding: '4px 0px'}}>
+                  <div style={{display: 'flex', marginRight: 6}}>
+                    <CiGrid41 size='1.35rem' />
+                  </div>
+                  <span style={{fontSize: 14}}>Filtros</span>
+                </button>
+              </div>
+            </div>
           </Col>
-          <Col sm={10}>
+          <Col sm={10} style={{marginLeft: 'auto'}}>
             <div style={{maxWidth: 800, margin: '0 auto', marginTop: '5rem'}}>
               <div style={{borderBottom: '1px solid #eee', fontWeight: 700, paddingBottom: 6}}>Minhas tarefas <span style={{color: '#808080', marginLeft: 5, fontSize: 12, fontWeight: 500}}>{list.length}</span></div>
               {renderList()}
@@ -120,7 +153,7 @@ export function App() {
             </div>
           </Col>
         </Row>
-        <ModalAdicionarTarefa show={show} handleClose={handleAddTask} handleChange={handleInputValueTask} />
+        <ModalAdicionarTarefa show={show} handleClose={handleClose} handleAddTask={handleAddTask} handleChange={handleInputValueTask} />
       </Container>
     </>
   );
