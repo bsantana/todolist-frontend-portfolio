@@ -1,0 +1,9 @@
+.sidebar-list-item:hover {
+  background-color: #f2efed;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* 
+.sidebar-list-item {
+  background-color: red;
+} */
