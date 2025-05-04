@@ -9,16 +9,14 @@ const ModalAdicionarTarefa = ({ show, handleClose, handleAddTask, handleChange }
 				<Modal.Header closeButton>
 				</Modal.Header>
 				<Modal.Body>
-					<Form>
-						<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-							<Form.Control
-								type="email"
-								placeholder="Digite o nome da tarefa"
-								onChange={handleChange}
-								autoFocus
-							/>
-						</Form.Group>
-					</Form>
+					<Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+						<Form.Control
+							placeholder="Digite o nome da tarefa"
+							onChange={handleChange}
+							name="title"
+							autoFocus
+						/>
+					</Form.Group>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="primary" onClick={handleAddTask}>

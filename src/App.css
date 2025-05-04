@@ -23,3 +23,12 @@ html {
 svg {
   vertical-align: initial !important;
 }
+
+.update-title:not(:focus) {
+  border: none;
+  padding-left: 0;
+}
+
+textarea, input {
+  box-shadow: none !important;
+}

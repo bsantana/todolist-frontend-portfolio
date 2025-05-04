@@ -16,7 +16,7 @@ const CustomToggle = React.forwardRef(({ onClick }, ref) => (
   </button>
 ));
 
-const Dropdown = ({ taskId, handleDeleteTasks }) => {
+const Dropdown = ({ taskId, handleDeleteTasks, duplicateTasks }) => {
   return (
     <Dropdw>
       <Dropdw.Toggle as={CustomToggle}>
@@ -24,10 +24,10 @@ const Dropdown = ({ taskId, handleDeleteTasks }) => {
 
       <Dropdw.Menu style={{fontSize: 13}}>
         <Dropdw.Item eventKey="1">Editar</Dropdw.Item>
-        <Dropdw.Item eventKey="2">Mover para...</Dropdw.Item>
-        <Dropdw.Item eventKey="2">Duplicar</Dropdw.Item>
+        <Dropdw.Item eventKey="2" disabled>Mover para...</Dropdw.Item>
+        <Dropdw.Item eventKey="2" onClick={() => duplicateTasks(taskId)}>Duplicar</Dropdw.Item>
         <Dropdw.Divider />
-        <Dropdw.Item eventKey="3">Arquivar</Dropdw.Item>
+        <Dropdw.Item eventKey="3" disabled>Arquivar</Dropdw.Item>
         <Dropdw.Item eventKey="1" style={{color: 'red'}} onClick={() => handleDeleteTasks(taskId)}>Excluir</Dropdw.Item>
       </Dropdw.Menu>
     </Dropdw>

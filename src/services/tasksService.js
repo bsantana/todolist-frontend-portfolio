@@ -15,13 +15,26 @@ export const getListTasks = async () => {
 export const createTasks = async (title) => {
   try {
     const data = {
-      title: title
+      title
     }
     const response = await axios.post(`${API_BASE_URL}/tasks`, data);
     return response.data;
   } catch (err) {
-    console.log('Erro ao criar tasks:', err);
-    // return false;
+    console.error('Erro ao criar tasks:', err);
+    throw err;
+  }
+}
+
+export const updateTasks = async (title, description, taskId) => {
+  try {
+    const data = {
+      title,
+      description
+    }
+    const response = await axios.put(`${API_BASE_URL}/tasks/${taskId}`, data);
+    return response.data;
+  } catch (err) {
+    console.error('Erro ao atualizar tasks:', err);
     throw err;
   }
 }
@@ -32,6 +45,16 @@ export const deleteTasks = async (taskId) => {
     return response.data;
   } catch (err) {
     console.error('Erro ao deletar tasks:', err);
+    throw err;
+  }
+}
+
+export const duplicateTasks = async (taskId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/tasks/${taskId}/duplicate`);
+    return response.data;
+  } catch (err) {
+    console.error('Erro ao duplicar tasks:', err);
     throw err;
   }
 }

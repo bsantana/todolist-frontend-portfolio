@@ -5,19 +5,23 @@ import Col from 'react-bootstrap/Col';
 
 import { ToastContainer, toast } from 'react-toastify';
 
-import { getListTasks, createTasks, deleteTasks } from './services/tasksService';
+import { getListTasks, createTasks, updateTasks, deleteTasks, duplicateTasks } from './services/tasksService';
 
 import ModalAdicionarTarefa from './components/ModalAdicionarTarefa';
+import ModalAtualizarTarefa from './components/ModalAtualizarTarefa';
 import SideBarList from './components/SideBarList';
-import List from './components/List';
+import ListTasks from './components/ListTasks';
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export function App() {
   const [show, setShow] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [list, setList] = useState([]);
-  const [inputValueTask, setInputValueTask] = useState('');
+  const [inputTitleTask, setInputTitleTask] = useState('');
+  const [inputDescriptionTask, setInputDescriptionTask] = useState('');
+  const [task, setTask] = useState({});
 
   useEffect(() => {
     buscarTasks();
@@ -25,27 +29,44 @@ export function App() {
 
   const handleClose = () => {
     setShow(false);
-    setInputValueTask('');
+    setInputTitleTask('');
+  }
+
+  const handleCloseUpdateModal = () => {
+    setShowUpdateModal(false);
+    setInputTitleTask('');
   }
 
   const handleShow = () => setShow(true);
 
+  const handleShowUpdateModal = (task) => {
+    setShowUpdateModal(true);
+    setTask(task);
+  }
+
   const handleInputValueTask = (e) => {
-    setInputValueTask(e.target.value)
+    const { name, value } = e.target;
+    switch(name) {
+      case 'title':
+        setInputTitleTask(value);
+        break;
+      case 'description':
+        setInputDescriptionTask(value);
+        break;
+    }
   }
 
   const handleAddTask = async () => {
     try {
-      await createTasks(inputValueTask)
-      await buscarTasks()
-      handleClose()
+      await createTasks(inputTitleTask);
+      await buscarTasks();
+      handleClose();
     } catch (err) {
-      console.error(err)
+      console.error(err);
       if(err.response.data) {
         toast.error(err.response.data.message);
       }
     }
-    
   }
 
   const handleDeleteTasks = async (taskId) => {
@@ -53,10 +74,21 @@ export function App() {
     await buscarTasks();
   }
 
+  const handleUpdateTasks = async (taskId) => {
+    await updateTasks(inputTitleTask, inputDescriptionTask, taskId);
+    await buscarTasks();
+    handleCloseUpdateModal();
+  }
+
+  const handleDuplicateTasks = async (taskId) => {
+    await duplicateTasks(taskId);
+    await buscarTasks();
+  }
+
   const buscarTasks = async () => {
     const result = await getListTasks()
     if(result.data.length) {
-      setList(result.data)
+      setList(result.data);
     }
   }
 
@@ -70,12 +102,13 @@ export function App() {
           <Col sm={10} style={{marginLeft: 'auto'}}>
             <div style={{maxWidth: 800, margin: '0 auto', marginTop: '5rem'}}>
               <div style={{borderBottom: '1px solid #eee', fontWeight: 700, paddingBottom: 6}}>Minhas tarefas <span style={{color: '#808080', marginLeft: 5, fontSize: 12, fontWeight: 500}}>{list.length}</span></div>
-              <List items={list} handleDeleteTasks={handleDeleteTasks} />
+              <ListTasks items={list} handleShowUpdateModal={handleShowUpdateModal} handleDeleteTasks={handleDeleteTasks} duplicateTasks={handleDuplicateTasks} />
               <button>Adicionar tarefa</button>
             </div>
           </Col>
         </Row>
         <ModalAdicionarTarefa show={show} handleClose={handleClose} handleAddTask={handleAddTask} handleChange={handleInputValueTask} />
+        <ModalAtualizarTarefa show={showUpdateModal} task={task} handleClose={handleCloseUpdateModal} handleAddTask={handleUpdateTasks} handleChange={handleInputValueTask} />
         <ToastContainer />
       </Container>
     </>
